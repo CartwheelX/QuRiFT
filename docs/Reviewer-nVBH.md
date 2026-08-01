@@ -16,11 +16,11 @@ For the loss-based attack, increasing feature-map repetitions from 1 to 5 produc
 | Online LiRA, fixed variance | Feature map | Z $-$ EffSU2 | $+0.057 \pm 0.030$ | $[0.038, 0.076]$ | 12 |
 | Online LiRA, fixed variance | Feature map | ZZ $-$ EffSU2 | $+0.070 \pm 0.059$ | $[0.021, 0.117]$ | 12 |
 | Online LiRA, fixed variance | Feature map | ZZ $-$ Z | $+0.014 \pm 0.044$ | $[-0.026, 0.048]$ | 12 |
-| Label-only chord-boundary | Repetitions | $5 - 1$ | $+0.068 \pm 0.026$ | $[0.049, 0.085]$ | 18 |
-| Label-only chord-boundary | Depth | $6 - 2$ | $+0.047 \pm 0.033$ | $[0.021, 0.068]$ | 18 |
-| Label-only chord-boundary | Feature map | Z $-$ EffSU2 | $+0.038 \pm 0.035$ | $[0.004, 0.061]$ | 12 |
-| Label-only chord-boundary | Feature map | ZZ $-$ EffSU2 | $+0.054 \pm 0.039$ | $[0.022, 0.087]$ | 12 |
-| Label-only chord-boundary | Feature map | ZZ $-$ Z | $+0.017 \pm 0.026$ | $[-0.004, 0.035]$ | 12 |
+| Label-only | Repetitions | $5 - 1$ | $+0.068 \pm 0.026$ | $[0.049, 0.085]$ | 18 |
+| Label-only  | Depth | $6 - 2$ | $+0.047 \pm 0.033$ | $[0.021, 0.068]$ | 18 |
+| Label-only | Feature map | Z $-$ EffSU2 | $+0.038 \pm 0.035$ | $[0.004, 0.061]$ | 12 |
+| Label-only  | Feature map | ZZ $-$ EffSU2 | $+0.054 \pm 0.039$ | $[0.022, 0.087]$ | 12 |
+| Label-only  | Feature map | ZZ $-$ Z | $+0.017 \pm 0.026$ | $[-0.004, 0.035]$ | 12 |
 
 The access-model comparison adds useful nuance. Repetition has a positive pooled effect under loss-threshold, LiRA, and label-only attacks. Z and ZZ are consistently above EffSU2 across these attack families, while the difference between Z and ZZ is not resolved. Under the loss and label-only attacks, the repetition contrast is larger than the depth contrast; under LiRA, depth's effect also contributed. We therefore interpret encoder family and repeated data encoding as privacy-relevant structural factors whose influence persists across target initializations and attack access models.
 
@@ -89,7 +89,7 @@ We broadened the direct attack evaluation to cover substantially different infor
 | Online LiRA, fixed variance | True-label probability and calibrated reference QNNs | $0.609 \pm 0.063$ | $0.128 \pm 0.056$ | $0.192 \pm 0.069$ |
 | Online LiRA, per-record variance | True-label probability and calibrated reference QNNs | $0.594 \pm 0.057$ | $0.086 \pm 0.034$ | $0.155 \pm 0.063$ |
 | Offline LiRA, fixed variance | True-label probability and calibrated reference QNNs | $0.517 \pm 0.029$ | $0.066 \pm 0.027$ | $0.128 \pm 0.035$ |
-| Label-only chord-boundary | Predicted labels only and held-out anchors | $0.582 \pm 0.052$ | $0.077 \pm 0.027$ | $0.139 \pm 0.030$ |
+| Label-only  | Predicted labels only and held-out anchors | $0.582 \pm 0.052$ | $0.077 \pm 0.027$ | $0.139 \pm 0.030$ |
 
 The strongest average result is obtained by online LiRA with fixed variance, while the loss-threshold and label-only attacks preserve the same principal structural ordering. The per-record and offline LiRA variants are weaker in this setting, which is also reported in full. The agreement across attacks with different access assumptions supports the conclusion that the observed leakage pattern is not an artifact of just one particular attack implementation.
 
