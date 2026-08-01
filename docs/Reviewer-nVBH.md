@@ -1,7 +1,7 @@
 
 We thank the reviewer for the careful reading and constructive questions.
 
-The main concern raised in the review is whether the structural patterns observed in the original sweep are supported by direct membership-inference evidence under controlled and repeated evaluation. To address this directly, we added a fully crossed $3\times2\times2$ MNIST-QNN study over feature-map family, feature-map repetition, and variational depth. The study includes all 12 structural configurations, three independently initialized target models per configuration, repeated attacker training where applicable, and several attack models with different information-access assumptions. In total, the follow-up comprises 36 target models and is used as the main controlled validation of the structural findings. The broader experiments in the submission continue to provide coverage across datasets, QNN/HQNN/QCNN wrappers, and circuit choices.
+The main concern raised in the review is whether the structural patterns observed in the original sweep are supported by direct membership-inference evidence under controlled and repeated evaluation. To address this directly, we added a fully crossed $3\times2\times2$ MNIST-QNN study over feature-map family, feature-map repetition, and variational depth. The study includes all 12 structural configurations, three independently initialized target models per configuration, repeated attacker training where applicable, and several attack models with different information-access assumptions. In total, the follow-up comprises 36 target models and is used as the main controlled validation of the structural findings. The broader experiments in the submission continue to provide coverage across datasets, QNN/HQNN/QCNN wrappers, and circuit choices. We provide these new experiments as a quick sanity check, as evaluating the full original sweep space of 349,920 configurations was not feasible due to computational and time constraints of the rebuttal.
 
 ## Q1. Multi-seed robustness of the structural and attack results
 
@@ -22,9 +22,8 @@ For the loss-based attack, increasing feature-map repetitions from 1 to 5 produc
 | Label-only chord-boundary | Feature map | ZZ $-$ EffSU2 | $+0.054 \pm 0.039$ | $[0.022, 0.087]$ | 12 |
 | Label-only chord-boundary | Feature map | ZZ $-$ Z | $+0.017 \pm 0.026$ | $[-0.004, 0.035]$ | 12 |
 
-The access-model comparison adds useful nuance. Repetition has a positive pooled effect under loss-threshold, LiRA, and label-only attacks. Z and ZZ are consistently above EffSU2 across these attack families, while the difference between Z and ZZ is not resolved. Under the loss and label-only attacks, the repetition contrast is larger than the depth contrast; under LiRA, depth also has a strong effect. We therefore interpret encoder family and repeated data encoding as privacy-relevant structural factors whose influence persists across target initializations and attack access models, rather than as factors that must dominate every individual attack statistic.
+The access-model comparison adds useful nuance. Repetition has a positive pooled effect under loss-threshold, LiRA, and label-only attacks. Z and ZZ are consistently above EffSU2 across these attack families, while the difference between Z and ZZ is not resolved. Under the loss and label-only attacks, the repetition contrast is larger than the depth contrast; under LiRA, depth's effect also contributed. We therefore interpret encoder family and repeated data encoding as privacy-relevant structural factors whose influence persists across target initializations and attack access models.
 
-The data partition is held fixed across the factorial so that the paired comparisons isolate structural and initialization effects under the same records. The replicated results therefore quantify robustness to target and attacker initialization within this controlled setting.
 
 ## Q2. Evaluation of all configurations and removal of regime-based selection
 
@@ -45,14 +44,14 @@ The follow-up does not reuse the submission's earlier baseline/stress/hard regim
 | ZZ, reps=5, depth=2 | 3 | $0.601 \pm 0.025$ | $0.595 \pm 0.020$ | $0.566 \pm 0.023$ | $0.601 \pm 0.022$ |
 | ZZ, reps=5, depth=6 | 3 | $0.679 \pm 0.018$ | $0.714 \pm 0.040$ | $0.727 \pm 0.008$ | $0.671 \pm 0.025$ |
 
-> *Entries are mean $\pm$ sample SD across three target seeds. For the learned-vector attack, AUC is first averaged across the three attacker seeds for each target.*
 
-The complete table shows that the central trends are not driven by one selected configuration. Higher repetition generally increases attack AUC, particularly for Z and ZZ encoders; increasing depth also raises leakage in most matched comparisons; and the highest attack values are concentrated in the repeated, deeper Z/ZZ configurations. EffSU2 remains comparatively less exposed across the evaluated attack models.
+The complete table shows that the central trends are not driven by one selected configuration. Higher repetition generally increases attack AUC, particularly for Z and ZZ encoders; increasing depth also raises leakage relatively; and the highest attack values are concentrated in the repeated, deeper Z/ZZ configurations. EffSU2 remains comparatively less exposed across the evaluated attack models, supporting our previous claim.
 
-Across all 36 target models, the generalization gap and loss-attack AUC have Pearson correlation $r=0.948$, with 95% confidence interval $[0.864, 0.982]$, and Spearman correlation $\rho=0.931$, with interval $[0.710, 0.974]$. This strong within-design association supports the use of the generalization gap as a descriptive privacy-risk proxy in the exploratory sweep. The direct attack results remain the primary evidence: the proxy is not treated as a deterministic predictor, and the new factorial does not rely on the earlier regime labels.
+Across all 36 target models, the generalization gap and loss-attack AUC have Pearson correlation $r=0.948$, with 95% confidence interval $[0.864, 0.982]$, and Spearman correlation $\rho=0.931$, with interval $[0.710, 0.974]$. This strong within-design association supports the use of the generalization gap as a privacy-risk proxy in the exploratory sweep. The direct attack results remain the primary evidence: the proxy is not treated as a deterministic predictor, and the new factorial does not rely on the earlier regime labels.
 
-## Q3. Mathematical definition of the factor-attribution figure
+## Q3. Factor-attribution results
 
+The submitted paper describes Fig. 8 as ‘factor-wise attribution \arrowright to the generalization gap’ and uses the phrase ‘variance-attribution analysis.’ Our intention was to express relative factor importance on a 100-point scale. 
 We agree that the calculation behind Fig. 8 should be stated explicitly. The figure is constructed as a dataset-wise descriptive ranking of the association between each displayed factor and the prespecified privacy-risk proxy $y=\Delta_{\mathrm{gen}}$.
 
 Let $N$ denote the number of runs and $g_j$ the number of levels of categorical factor $j$. For a categorical factor, the one-way ANOVA statistic $F_j$ is transformed into a bounded association score:
@@ -67,9 +66,9 @@ The displayed percentage is the normalized share of the aggregate association sc
 
 $$A_j = 100\frac{s_j}{\sum_k s_k}, \qquad \sum_j A_j=100$$
 
-The component scores are nonnegative, dimensionless, and bounded by one. A value such as 22.5% therefore means that the corresponding term accounts for 22.5% of the total displayed factor-association score within that dataset. It is not presented as a Sobol decomposition, a causal effect, or a conditional coefficient from a joint model.
+It is not presented as a Sobol decomposition, a causal effect, or a conditional coefficient from a joint model.
 
-In the revision, we will replace the term *contribution* with *normalized factor-association share* and add the equations directly to the manuscript. We will also make clear that Fig. 8 is an exploratory broad-sweep summary. The controlled evidence for the feature-map, repetition, and depth findings comes from the paired direct-MIA contrasts in the fully crossed factorial, which do not depend on the normalization used in Fig. 8.
+In the revision, we will replace the term *contribution* with *normalized factor-association* and add the equations directly to the manuscript. The controlled evidence for the feature-map, repetition, and depth findings comes from the paired direct-MIA contrasts in the fully crossed factorial, which do not depend on the normalization used in Fig. 8.
 
 ## Q4. Architecture controls
 
@@ -77,11 +76,11 @@ We added architecture-level comparisons using QNN, HQNN, QCNN, and a classical M
 
 Relative to QNN, the classical MLP improves test accuracy by $+0.146 \pm 0.093$, with 95% confidence interval $[0.062, 0.259]$. Its generalization-gap and loss-AUC differences are not resolved. QCNN improves test accuracy by $+0.190 \pm 0.052$, $[0.148, 0.249]$, reduces the generalization gap by $-0.041 \pm 0.042$, $[-0.083, -0.007]$, and reduces loss-attack AUC by $-0.019 \pm 0.025$, $[-0.040, -0.001]$. The HQNN intervals overlap zero.
 
-These comparisons show that the magnitude of the observed structural privacy signal depends on the surrounding model architecture. In particular, QCNN achieves higher predictive performance while exhibiting a smaller gap and lower loss-based membership leakage than the corresponding QNN role. The architecture experiments are reported as complete-wrapper comparisons, with parameter and gate counts made explicit, rather than as perfectly matched causal ablations. This distinction is now stated directly in the manuscript.
+These results show that the surrounding model architecture moderates the magnitude of the observed structural privacy signal. In particular, QCNN achieves higher predictive performance while exhibiting a smaller generalization gap and lower loss-based membership leakage than the paired QNN roles. This architectural moderation does not negate the within-QNN feature-map-family and repetition effects established by the focused factorial. It shows that the downstream expression of the encoder-conditioned signal depends on the complete model wrapper. Because the wrappers retain different preprocessing components and prediction heads, these comparisons are not matched-preprocessing causal ablations. We therefore report them as complete-wrapper controls with explicit parameter and gate accounting. 
 
 ## Q5. Expanded attack evaluation and bounded conclusions
 
-We broadened the direct attack evaluation to cover substantially different information-access assumptions. The added attacks include a scalar loss threshold, a learned prediction-vector attacker, calibrated online and offline LiRA variants, and a class-label-only boundary attack. Together, these experiments test whether the structural signal is specific to a single attack statistic or remains visible under stronger calibration and more restricted output access.
+We broadened the direct attack evaluation to cover substantially different information-access assumptions. The added attacks include a scalar loss threshold, a learned prediction-vector MLP attacker, calibrated online and offline LiRA variants, and a class-label-only boundary attack. Together, these experiments test whether the structural signal is specific to a single attack statistic or remains visible under stronger calibration and more restricted output access.
 
 | Attack | Information access | AUC | TPR@5% FPR | TPR@10% FPR |
 | --- | --- | --- | --- | --- |
@@ -92,8 +91,12 @@ We broadened the direct attack evaluation to cover substantially different infor
 | Offline LiRA, fixed variance | True-label probability and calibrated reference QNNs | $0.517 \pm 0.029$ | $0.066 \pm 0.027$ | $0.128 \pm 0.035$ |
 | Label-only chord-boundary | Predicted labels only and held-out anchors | $0.582 \pm 0.052$ | $0.077 \pm 0.027$ | $0.139 \pm 0.030$ |
 
-The strongest average result is obtained by online LiRA with fixed variance, while the loss-threshold and label-only attacks preserve the same principal structural ordering. The per-record and offline LiRA variants are weaker in this setting, which is also reported in full. The agreement across attacks with different access assumptions supports the conclusion that the observed leakage pattern is not an artifact of one particular attack implementation.
+The strongest average result is obtained by online LiRA with fixed variance, while the loss-threshold and label-only attacks preserve the same principal structural ordering. The per-record and offline LiRA variants are weaker in this setting, which is also reported in full. The agreement across attacks with different access assumptions supports the conclusion that the observed leakage pattern is not an artifact of just one particular attack implementation.
 
-The revision also narrows the scope of the claims to match the evidence. The confirmatory analysis concerns feature-map family, repetition, and depth in the controlled MNIST-QNN factorial. Width, entangler, gate, and padding results from the broader sweep remain exploratory. The evaluated datasets consist of synthetic tasks and compressed four-class MNIST under noiseless simulation. References to sensitive applications are used to motivate why membership privacy matters in QML; they are not presented as evidence of deployment readiness.
+The revision narrows the claims to what is directly supported by the new evidence. The confirmatory analysis focuses on feature-map family, repetition, and variational depth in the controlled MNIST-QNN factorial, while the broader observations on width, entanglement topology, gate choices, and padding are retained as exploratory. To examine whether the observed trends persist beyond exact simulation, we additionally evaluate representative structural configurations under finite-shot execution and an ibm_kingston backend noisy model. Although realistic noise reduces attack strength and introduces modest variability, the overall structural trends remain consistent, indicating that the observed privacy differences are not artifacts of idealized inference alone.
 
-Classical CNN/kernel models, quantum-kernel methods, regularized or early-stopped QNNs, differentially private training, and calibration-based defenses are valuable directions for a broader follow-up study, but they are not required for the narrower claim established here: within the evaluated QML setting, encoder family and repeated data encoding produce reproducible differences in generalization behavior and direct membership-inference vulnerability, and these differences remain visible across multiple target initializations, attacker initializations, and attack access models.
+Throughout the paper we consider the standard black-box setting, where the adversary observes only the classical outputs returned by the target model. Under this interface, membership inference naturally operates on predicted probabilities or labels, making established black-box attacks directly applicable without requiring access to quantum states or circuit internals. However, the potential privacy risks of direct quantum measurements remain an under-investigated open question.
+
+Finally, the empirical evaluation is conducted on synthetic datasets and compressed four-class MNIST. References to domains such as healthcare, finance, and genomics are intended to motivate why privacy deserves attention as QML matures, rather than to suggest deployment-specific validation. The conclusions are therefore confined to the evaluated setting and supported by the controlled experiments presented in the revision.
+
+Classical CNN/kernel models, quantum-kernel methods, regularized or early-stopped QNNs, differentially private training, and calibration-based defenses are valuable directions for a broader follow-up study.
