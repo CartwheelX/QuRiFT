@@ -1,3 +1,4 @@
+
 We thank the reviewer for the careful reading and constructive questions. 
 
 The main concern raised in the review is whether the structural patterns observed in the original sweep are supported by direct membership-inference evidence under controlled and repeated evaluation. To address this directly, we added a fully crossed \(3\times2\times2\) MNIST-QNN study over feature-map family, feature-map repetition, and variational depth. The study includes all 12 structural configurations, three independently initialized target models per configuration, repeated attacker training where applicable, and several attack models with different information-access assumptions. In total, the follow-up comprises 36 target models and is used as the main controlled validation of the structural findings. The broader experiments in the submission continue to provide coverage across datasets, QNN/HQNN/QCNN wrappers, and circuit choices.
